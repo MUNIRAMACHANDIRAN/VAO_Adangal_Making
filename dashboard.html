@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crop Data Dashboard</title>
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-soft: #020617;
+      --card: #020617;
+      --border-subtle: rgba(148,163,184,0.25);
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.18);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+    }
+    header {
+      padding: 14px 20px;
+      border-bottom: 1px solid rgba(148,163,184,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to right, rgba(15,23,42,0.92), rgba(15,23,42,0.82));
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand-title {
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      font-size: 14px;
+    }
+    .brand-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .user-badge {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+    .user-badge strong { color: var(--text-main); }
+    .user-badge button {
+      margin-left: 8px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.4);
+      background: rgba(15,23,42,0.9);
+      color: var(--text-main);
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .shell {
+      max-width: 1120px;
+      margin: 18px auto 22px;
+      padding: 0 16px 18px;
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 22px;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 540px;
+    }
+    .grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .card {
+      position: relative;
+      border-radius: 16px;
+      padding: 14px 14px 12px;
+      background: radial-gradient(circle at top left, rgba(34,197,94,0.09), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(59,130,246,0.09), transparent 55%),
+                  var(--card);
+      border: 1px solid var(--border-subtle);
+      box-shadow: 0 18px 40px rgba(15,23,42,0.78);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .card small {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .card-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pill {
+      font-size: 10px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 0;
+      font-size: 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 100ms ease, box-shadow 120ms ease, filter 100ms ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg,#22c55e,#4ade80);
+      color: #020617;
+      box-shadow: 0 10px 24px rgba(34,197,94,0.6);
+    }
+    .btn-soft {
+      background: rgba(15,23,42,0.9);
+      color: var(--text-main);
+      border: 1px solid rgba(148,163,184,0.45);
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: none;
+    }
+    footer {
+      margin-top: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+<body>
+  <script src="auth.js"></script>
+  <script>requireAuth();</script>
+
+  <header>
+    <div class="brand">
+      <div class="brand-title">Crop Data Dashboard</div>
+      <div class="brand-sub">Entry • Month-wise abstracts • Account I / I‑A • Exports</div>
+    </div>
+    <div id="userBadge" class="user-badge"></div>
+  </header>
+
+  <main class="shell">
+    <section>
+      <h1>Welcome to your crop workspace</h1>
+      <p class="subtitle">
+        Choose what you want to do: capture field entries, generate month-wise and account-wise abstracts,
+        or open your advanced Excel-based reporting tools.
+      </p>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <div class="card-title">
+          Crop entry (LocalStorage)
+          <span class="pill">Entry</span>
+        </div>
+        <small>Simple Tamil data entry using browser LocalStorage with crop-wise and month-wise totals.</small>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openTool('crop.html')">Open crop.html</button>
+          <button class="btn btn-soft" onclick="openTool('crop_data_entry.html')">Alternate entry form</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-title">
+          Account-wise / Abstract reports
+          <span class="pill">Reports</span>
+        </div>
+        <small>Generate Account I, I‑A and month-wise abstracts from Excel or saved entries.</small>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openTool('Account_wise.html')">Account-wise &amp; Abstract</button>
+          <button class="btn btn-soft" onclick="openTool('Crop_Report.html')">Month &amp; Abstract I‑A</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-title">
+          Month-wise subtotal tools
+          <span class="pill">Excel</span>
+        </div>
+        <small>Upload Excel and create month / crop subtotals with export to PDF, Word, XLSX.</small>
+        <div class="actions">
+          <button class="btn btn-soft" onclick="openTool('Data.html')">Report (Data.html)</button>
+          <button class="btn btn-soft" onclick="openTool('data1.html')">Report (data1.html)</button>
+          <button class="btn btn-soft" onclick="openTool('upgrade.html')">Tabbed report (upgrade.html)</button>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="card-title">
+          Advanced entry (IndexedDB)
+          <span class="pill">Advanced</span>
+        </div>
+        <small>Form-builder style entry using IndexedDB with Excel / SQL export and backups.</small>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openTool('deep.html')">Open deep.html</button>
+          <button class="btn btn-soft" onclick="openTool('Final.html')">Account 1 / 1A tab view</button>
+        </div>
+      </article>
+    </section>
+
+    <footer>
+      <span>Tip: keep this dashboard open and use browser tabs for each tool.</span>
+      <span>To change which tools show here, edit <code>dashboard.html</code>.</span>
+    </footer>
+  </main>
+
+  <script>
+    (function () {
+      // show user + logout
+      var badge = document.getElementById('userBadge');
+      if (typeof getCurrentUser === 'function') {
+        var user = getCurrentUser();
+        if (user && badge) {
+          badge.innerHTML =
+            'Signed in as <strong>' + user.username +
+            '</strong> <button type="button" onclick="logoutUser(true)">Logout</button>';
+        }
+      }
+      window.openTool = function (file) {
+        window.location.href = file;
+      };
+    })();
+  </script>
+</body>
+</html>
+
+

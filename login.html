@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crop System Login</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #020617;
+      --card-soft: #0b1120;
+      --accent: #22c55e;
+      --accent-soft: rgba(34,197,94,0.16);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --danger: #f97373;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0, #020617 55%, #000 100%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .shell {
+      width: 100%;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: minmax(0,1.2fr) minmax(0,1fr);
+      gap: 20px;
+    }
+    @media (max-width: 800px) {
+      .shell { grid-template-columns: minmax(0,1fr); }
+      .hero { display: none; }
+    }
+    .panel {
+      background: linear-gradient(145deg, #020617, #020617);
+      border-radius: 18px;
+      padding: 22px 22px 20px;
+      box-shadow:
+        0 24px 60px rgba(0,0,0,0.75),
+        0 0 0 1px rgba(148,163,184,0.10);
+      position: relative;
+      overflow: hidden;
+    }
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(34,197,94,0.06), transparent 55%),
+        radial-gradient(circle at bottom right, rgba(59,130,246,0.05), transparent 55%);
+      opacity: 1;
+      pointer-events: none;
+    }
+    .panel-inner { position: relative; z-index: 1; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.3);
+      color: var(--text-muted);
+      font-size: 11px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 3px rgba(34,197,94,0.35);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin: 0 0 6px;
+      letter-spacing: 0.01em;
+    }
+    .subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      max-width: 360px;
+    }
+
+    form {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    label {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+    .input-shell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.55);
+      background: rgba(15,23,42,0.85);
+      transition: border-color 140ms ease, box-shadow 140ms ease, background 140ms ease;
+    }
+    .input-shell:focus-within {
+      border-color: rgba(34,197,94,0.9);
+      box-shadow: 0 0 0 1px rgba(34,197,94,0.4);
+      background: rgba(15,23,42,0.95);
+    }
+    .input-shell span {
+      font-size: 13px;
+      color: var(--text-muted);
+      min-width: 60px;
+    }
+    input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 14px;
+      width: 100%;
+    }
+    input::placeholder { color: #4b5563; }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .hint {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .btn-primary {
+      margin-top: 8px;
+      width: 100%;
+      padding: 9px 13px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #020617;
+      background: linear-gradient(135deg,#22c55e,#4ade80);
+      box-shadow:
+        0 12px 30px rgba(16,185,129,0.45),
+        0 0 0 1px rgba(21,128,61,0.4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 120ms ease, box-shadow 120ms ease, filter 100ms ease;
+    }
+    .btn-primary:hover {
+      filter: brightness(1.03);
+      transform: translateY(-1px);
+      box-shadow:
+        0 18px 40px rgba(16,185,129,0.6),
+        0 0 0 1px rgba(21,128,61,0.55);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow:
+        0 10px 25px rgba(16,185,129,0.48),
+        0 0 0 1px rgba(21,128,61,0.4);
+    }
+
+    .error {
+      margin-top: 6px;
+      font-size: 12px;
+      color: var(--danger);
+      min-height: 16px;
+    }
+
+    .env-note {
+      margin-top: 10px;
+      padding: 7px 10px;
+      border-radius: 10px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.35);
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .env-note strong { color: #e5e7eb; }
+
+    .hero {
+      background: radial-gradient(circle at top left, rgba(45,212,191,0.18), transparent 55%),
+                  radial-gradient(circle at bottom right, rgba(56,189,248,0.16), transparent 55%),
+                  linear-gradient(145deg,#020617,#020617);
+      border-radius: 18px;
+      padding: 18px 18px 16px;
+      border: 1px solid rgba(148,163,184,0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+    .hero-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .pill {
+      font-size: 10px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.82);
+      border: 1px solid rgba(148,163,184,0.55);
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .metric-card {
+      margin-top: 8px;
+      padding: 8px 9px;
+      border-radius: 12px;
+      background: rgba(15,23,42,0.92);
+      border: 1px solid rgba(148,163,184,0.45);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .metric {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .metric span {
+      display: block;
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-top: 2px;
+    }
+    .hint-credentials {
+      margin-top: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .hint-credentials code {
+      background: rgba(15,23,42,0.9);
+      padding: 2px 6px;
+      border-radius: 6px;
+      border: 1px solid rgba(148,163,184,0.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="panel">
+      <div class="panel-inner">
+        <div class="badge">
+          <span class="badge-dot"></span>
+          Secure Access • Crop Data Suite
+        </div>
+        <h1>Sign in to Crop Data Workspace</h1>
+        <p class="subtitle">
+          Central login for all your offline crop entry, month-wise abstracts and account-wise reports.
+        </p>
+
+        <form id="loginForm" autocomplete="on" novalidate>
+          <div class="field">
+            <label for="username">User name</label>
+            <div class="input-shell">
+              <span>👤</span>
+              <input id="username" name="username" placeholder="e.g. admin" autocomplete="username" />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="input-shell">
+              <span>🔑</span>
+              <input id="password" name="password" type="password" placeholder="Your password" autocomplete="current-password" />
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="hint">
+              This login runs fully in the browser and stores a small session token in localStorage.
+            </div>
+          </div>
+
+          <button class="btn-primary" type="submit">
+            Continue
+          </button>
+
+          <div id="error" class="error"></div>
+
+          <div class="env-note">
+            <strong>Default offline admin login</strong><br />
+            You can change it later in <code>auth.js</code>:
+            <br />• user: <strong>admin</strong>
+            &nbsp;&nbsp;• password: <strong>admin123</strong>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <aside class="hero">
+      <div class="hero-inner">
+        <div class="hero-title">Crop data analysis, unified</div>
+        <div class="hero-text">
+          After login you can use your existing pages:
+          entry screens, month-wise reports, account I / I‑A abstracts, exports to Excel / PDF / SQL and more.
+        </div>
+
+        <div class="pill-row">
+          <div class="pill">Offline First</div>
+          <div class="pill">LocalStorage + IndexedDB</div>
+          <div class="pill">Excel / PDF Export</div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric">
+            Crop entries
+            <span>Survey-wise capture, month &amp; crop wise area.</span>
+          </div>
+          <div class="metric">
+            Analysis
+            <span>Account-wise, abstract I / I‑A, month subtotal.</span>
+          </div>
+        </div>
+
+        <div class="hint-credentials">
+          Tip: start with <code>admin / admin123</code>, then edit <code>auth.js</code> to use your own users.
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    (function () {
+      const form = document.getElementById('loginForm');
+      const usernameEl = document.getElementById('username');
+      const passwordEl = document.getElementById('password');
+      const errorEl = document.getElementById('error');
+
+      function showError(msg) {
+        errorEl.textContent = msg || '';
+      }
+
+      if (window.getCurrentUser && getCurrentUser()) {
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        showError('');
+        const username = (usernameEl.value || '').trim();
+        const password = (passwordEl.value || '').trim();
+
+        if (!username || !password) {
+          showError('Please enter both user name and password.');
+          return;
+        }
+
+        if (!window.loginUser) {
+          showError('Auth script not loaded. Please check auth.js.');
+          return;
+        }
+
+        const result = loginUser(username, password);
+        if (!result.ok) {
+          showError(result.message || 'Invalid credentials.');
+          return;
+        }
+
+        window.location.href = 'dashboard.html';
+      });
+    })();
+  </script>
+</body>
+</html>
+
+
